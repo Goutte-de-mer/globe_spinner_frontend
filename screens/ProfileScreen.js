@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-  SafeAreaView,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, SafeAreaView, useWindowDimensions } from "react-native";
 import GradientFontColor from "../components/GradientFontColor";
 // import { Icon } from "react-native-vector-icons/FontAwesome";
 
@@ -22,7 +9,6 @@ import UserDetails from "../components/UserDetails";
 import SignModal from "../components/SignModal";
 
 import { useSelector, useDispatch } from "react-redux";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { connect, disconnect, loadDetails } from "../reducers/userInfo";
 
@@ -33,9 +19,8 @@ import { CustomText } from "../components/CustomText";
 const { ipAddress, port } = require("../myVariables");
 
 export default function ProfileScreen({ navigation }) {
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const userInfo = useSelector((state) => state.userInfo.value);
-  // const userToken = useSelector((state) => state.userInfo.value.token);
 
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
@@ -47,19 +32,12 @@ export default function ProfileScreen({ navigation }) {
     setIsSigningUp(false);
   };
 
-  // const handleSubmit = () => {
-  //   navigation.navigate("Suggestions");
-  // };
-
   const signIn = async (email, password) => {
-    //console.log("handleSubmitSigninForm");
-    // setIsSigningIn(false);
     const data = await fetch(`http://${ipAddress}:${port}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     }).then((resp) => resp.json());
-    //console.log(data);
     if (data.result) {
       dispatch(connect(true));
       setIsSigningIn(false);
@@ -77,13 +55,11 @@ export default function ProfileScreen({ navigation }) {
   };
 
   const signUp = async (firstName, lastName, email, password) => {
-    // setIsSigningUp(false);
     const data = await fetch(`http://${ipAddress}:${port}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password }),
     }).then((resp) => resp.json());
-    // console.log(data);
     if (data.result) {
       dispatch(connect());
       setIsSigningUp(false);
@@ -108,26 +84,9 @@ export default function ProfileScreen({ navigation }) {
     />
   );
 
-  const signinForm = (
-    <SigninForm
-      submit={(email, password) => signIn(email, password)}
-      closeModal={closeModal}
-    />
-  );
+  const signinForm = <SigninForm submit={signIn} closeModal={closeModal} />;
 
-  const signupForm = (
-    <SignupForm
-      submit={(firstName, lastName, email, password) =>
-        signUp(firstName, lastName, email, password)
-      }
-      closeModal={closeModal}
-    />
-  );
-
-  // const HandlePressLogout = () => {
-  //   // console.log("HandlePressLogout");
-  //   dispatch(disconnect());
-  // };
+  const signupForm = <SignupForm submit={signUp} closeModal={closeModal} />;
 
   const userDetails = <UserDetails logout={() => dispatch(disconnect())} />;
 

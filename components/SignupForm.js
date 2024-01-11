@@ -42,30 +42,36 @@ export default function SignupForm({ submit, closeModal }) {
   };
 
   const handlePressSubmit = async () => {
-    if (
-      checkHasEmptyField([
-        firstname,
-        lastname,
-        email,
-        password,
-        confirmPassword,
-      ])
-    ) {
-      return Alert.alert("Some fields are missing!");
-    }
-    if (!EMAIL_REGEX.test(email)) {
-      return Alert.alert("Wrong email adress or");
-    }
-    if (password !== confirmPassword) {
-      return Alert.alert("Password doesn't match!");
-    }
-    if (password.length < 5) {
-      return Alert.alert("Some fields are missing!");
-    }
-    const response = await submit(firstname, lastname, email, password);
-    //console.log(response);
-    if (!response.result) {
-      return Alert.alert("Some fields are missing!");
+    try {
+      if (
+        checkHasEmptyField([
+          firstname,
+          lastname,
+          email,
+          password,
+          confirmPassword,
+        ])
+      ) {
+        return Alert.alert("Some fields are missing!");
+      }
+      if (!EMAIL_REGEX.test(email)) {
+        return Alert.alert("Wrong email adress");
+      }
+      if (password !== confirmPassword) {
+        return Alert.alert("Password doesn't match!");
+      }
+      if (password.length < 5) {
+        return Alert.alert("Password must be at least 5 characters");
+      }
+
+      const response = await submit(firstname, lastname, email, password);
+
+      if (!response.result) {
+        return Alert.alert("Signup failed!");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      Alert.alert("Signup error", "An error occurred during signup.");
     }
   };
 
@@ -122,6 +128,7 @@ export default function SignupForm({ submit, closeModal }) {
                 placeholder="e-mail"
                 style={styles.textInput}
                 value={email}
+                keyboardType="email-address"
                 onChangeText={(text) => setEmail(text)}
               ></TextInput>
             </View>
@@ -178,17 +185,16 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     flexDirection: "row",
-    marginBottom: 10,
     justifyContent: "center",
   },
 
   title: {
-    marginVertical: 45,
+    marginVertical: 25,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
   },
   titleUp: {
-    marginVertical: 45,
+    marginVertical: 25,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
     color: "#515151",

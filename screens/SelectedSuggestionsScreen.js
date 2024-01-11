@@ -30,7 +30,7 @@ const colors = {
 
 export default function SelectedSuggestionsScreen({ navigation, route }) {
   const { width } = useWindowDimensions();
-  const { trip, img, tripIndex, isBookmarked } = route.params;
+  const { trip, img, tripIndex } = route.params;
   const userInfo = useSelector((state) => state.userInfo.value);
   const dispatch = useDispatch();
 
@@ -90,7 +90,9 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
 
   // payment
   const handleContinueToPaymentPress = () => {
-    navigation.navigate("PaymentHomeStack");
+    navigation.navigate("PaymentHomeStack", {
+      trip: trip,
+    });
   };
   const handlePress = async () => {
     const result = await toggleBookmarkTrip(
@@ -333,7 +335,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "white",
     fontSize: 16,
-    // fontWeight: "bold",
     letterSpacing: 1,
   },
   // ---- ACTIVITIES -----
@@ -348,18 +349,14 @@ const styles = StyleSheet.create({
   activity: {
     paddingTop: 15,
     paddingHorizontal: 25,
-    // display: "block",
   },
   lastActivityContent: {
     borderBottomWidth: 0,
-    // paddingVertical: 15,
   },
   activityContent: {
-    // marginTop: 10,
     paddingTop: 10,
     paddingBottom: 20,
     borderBottomWidth: 3,
-    // borderStyle: "dashed",
     borderBottomColor: "white",
   },
   activityName: {

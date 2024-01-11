@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -12,21 +12,42 @@ import {
 import GradientFontColor from "../components/GradientFontColor";
 import { CustomText } from "../components/CustomText";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useIsFocused } from "@react-navigation/native";
+import moment from "moment";
 
 import { useSelector } from "react-redux";
+const { ipAddress, port } = require("../myVariables");
 
 export default function UserDetails({ logout }) {
   const userInfo = useSelector((state) => state.userInfo.value);
   const { height, width } = useWindowDimensions();
+  const [savedTrips, setSavedTrips] = useState([]);
+  const isFocused = useIsFocused();
 
-  //CETTE PARTIE EST COMMENTÉE CAR ELLE FAIT PLANTER LA PROMESSE AU MOMENT DU SIGNIN
-  //   useEffect(() => {
-  //     fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
-  //       .then((resp) => resp.json())
-  //       .then((data) => {
-  //         console.log("data: ", data);
-  //       });
-  //   }, []);
+  const getSavedTrips = async () => {
+    const savedTripsReceived = await fetch(
+      `http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`
+    ).then((resp) => resp.json());
+    setSavedTrips(savedTripsReceived);
+  };
+
+  useEffect(() => {
+    getSavedTrips();
+    console.log(savedTrips);
+  }, [isFocused]);
+
+  const savedTripsJSX = savedTrips.map((trip, i) => {
+    const startDate = trip.outboundJourney.transportSlot.departure.date;
+    const endDate = trip.inboundJourney.transportSlot.arrival.date;
+    const nbDays = moment(endDate).diff(moment(startDate), "days");
+    return (
+      <View key={i}>
+        <CustomText style={styles.savedTripText}>
+          - {trip.destination.name}, {trip.destination.country} ({nbDays} days)
+        </CustomText>
+      </View>
+    );
+  });
 
   return (
     <SafeAreaView style={[styles.container, { height }]}>
@@ -48,6 +69,14 @@ export default function UserDetails({ logout }) {
           </CustomText>
           <CustomText style={styles.text}>email: {userInfo.email}</CustomText>
         </View>
+        <CustomText>Saved trips</CustomText>
+        <>
+          {savedTrips.length === 0 ? (
+            <CustomText>No trips saved yet</CustomText>
+          ) : (
+            savedTripsJSX
+          )}
+        </>
       </ScrollView>
     </SafeAreaView>
   );

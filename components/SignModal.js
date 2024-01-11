@@ -13,7 +13,6 @@ const SignModal = ({ onClose, onSignIn, onSignUp, closeSignModal }) => {
   //const dispatch = useDispatch();
 
   return (
-    // plus de "Modal" car ça bug vraiment trop
     <View style={styles.container}>
       <View>
         <GradientFontColor style={styles.title}>Welcome !</GradientFontColor>

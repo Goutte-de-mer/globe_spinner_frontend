@@ -25,8 +25,6 @@ export default function SuggestionsScreen({ navigation }) {
   const [triggerFetchGenerate, setTriggerFetchGenerate] = useState(false);
   const dispatch = useDispatch();
 
-  //console.log("userInfo:", filtersFromStore);
-
   const bookmarkTrip = async (tripIndex) => {
     const result = await toggleBookmarkTrip(
       tripIndex,
@@ -38,8 +36,6 @@ export default function SuggestionsScreen({ navigation }) {
     }
     dispatch(toggleBookmark(tripIndex));
   };
-
-  console.log("suggestions", userInfo.bookmarked);
 
   const {
     generatedTrips,

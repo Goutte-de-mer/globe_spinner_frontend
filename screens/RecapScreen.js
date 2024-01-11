@@ -1,132 +1,102 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import GradientFontColor from "../components/GradientFontColor";
+import { CustomText } from "../components/CustomText";
+import { ScrollView } from "react-native-virtualized-view";
 
-const RecapScreen = () => {
-  const destination = "London";
-  const accommodation = "Hotel ABC";
-  const transport = "Flight XYZ";
-  const activities = "Picnic Basket, Spa Kit,Rain Poncho";
-  const amountPaid = 2500;
-
-  const navigation = useNavigation();
+export default function RecapScreen({ navigation, route }) {
+  const { trip } = route.params;
+  const destination = `${trip.destination.name}, ${trip.destination.country}`;
+  const accommodation = trip.accommodation.accommodationBase.name;
+  // const departurePlace;
+  // const departureTime;
+  // const departureArrivalPlace
+  // const departureArrivalTime
+  // const transport = "Flight XYZ";
+  const activities = trip.activities.map((act, i) => {
+    return (
+      <CustomText key={i}>
+        {act.activityBase.name.replace(/\d/g, "")}
+      </CustomText>
+    );
+  });
+  const amountPaid = trip.total;
   const handleOkPress = () => {
     navigation.navigate("HomeStack");
- 
   };
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../assets/globe.png")}
-        style={styles.backgroundImage}
-        resizeMode="cover"
-      />
+    <ScrollView contentContainerStyle={styles.container}>
+      <GradientFontColor style={styles.title}>Recap Trip</GradientFontColor>
 
-      <View style={styles.overlay}>
-
-        <GradientFontColor style={styles.title}>Recap Trip</GradientFontColor>
-        
-        
-       
-
-        <Text style={styles.subtitle}>Where to</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.info}>{destination}</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Accommodation</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.info}>{accommodation}</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Transport</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.info}>{transport}</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Activities</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.info}>{activities}</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Amount Paid:</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.info}>{amountPaid} euros</Text>
-        </View>
-
-        <TouchableOpacity style={styles.okButton} onPress={handleOkPress}>
-          <Text style={styles.okButtonText}>OK</Text>
-        </TouchableOpacity>
+      <CustomText style={styles.subtitle}>Where to</CustomText>
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.info}>{destination}</CustomText>
       </View>
-    </View>
+
+      <CustomText style={styles.subtitle}>Accommodation</CustomText>
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.info}>{accommodation}</CustomText>
+      </View>
+
+      <CustomText style={styles.subtitle}>Transport</CustomText>
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.info}></CustomText>
+      </View>
+
+      <CustomText style={styles.subtitle}>Activities</CustomText>
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.info}>{activities}</CustomText>
+      </View>
+
+      <CustomText style={styles.subtitle}>Amount Paid:</CustomText>
+      <View style={styles.infoContainer}>
+        <CustomText style={styles.info}>{amountPaid}€</CustomText>
+      </View>
+
+      <TouchableOpacity style={styles.okButton} onPress={handleOkPress}>
+        <CustomText style={styles.okButtonText}>OK</CustomText>
+      </TouchableOpacity>
+    </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 40,
+    paddingHorizontal: 40,
     backgroundColor: "white",
   },
-  backgroundImage: {
-    flex: 1,
-    width: "100%",
-    height: "50%",
-    resizeMode: "cover",
-    position: "absolute",
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    width: "100%",
-    height: 100,
-  },
   title: {
-    marginStart:5,
-    marginVertical:50,
+    marginVertical: 30,
     fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 30,
     fontFamily: "KronaOne_400Regular",
-    marginTop:40,
   },
-  // itemContainer: {
-  //   marginBottom: 12,
-  // },
+
   subtitle: {
-    fontSize: 15,
-    flex: 1,
     fontWeight: "bold",
-    marginBottom: 2,
-    marginTop:40,
+    marginTop: 20,
     fontFamily: "KronaOne_400Regular",
   },
   infoContainer: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: "#ccc",
     paddingBottom: 10,
     marginBottom: 20,
   },
   okButton: {
-    position: "right",
-    Right: -50,
-    backgroundColor: "#3498db",
-    paddingVertical: 7,
-    paddingHorizontal: 24,
-    borderRadius: 55,
-    marginBottom: 10,
+    backgroundColor: "#3972D9",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 20,
+    minWidth: "60%",
   },
   okButtonText: {
+    textTransform: "uppercase",
     color: "white",
-    fontSize: 14,
     fontWeight: "bold",
-    fontFamily: "KronaOne_400Regular",
+    fontSize: 16,
+    letterSpacing: 1,
+    textAlign: "center",
   },
 });
-
-export default RecapScreen;

@@ -1,28 +1,19 @@
 import React, { useState } from "react";
 import {
   View,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   KeyboardAvoidingView,
   SafeAreaView,
   Alert,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import GradienFontColor from "../components/GradientFontColor";
-import { ipAddress } from "../myVariables";
 
 export default function SigninForm({ submit, closeModal }) {
-  //const userInfo = useSelector(state => state.userInfo.value);
-  //console.log(userInfo.isConnected);
-
-  //const dispatch = useDispatch();
-
   const checkHasEmptyField = (fields) => {
     for (let field of fields) {
       if (!field || field === " ") return true;
@@ -35,10 +26,11 @@ export default function SigninForm({ submit, closeModal }) {
 
   const handlePressSubmit = async () => {
     if (checkHasEmptyField([email, password])) {
+      console.log(email, password);
       Alert.alert("Some fields are missing!");
       return;
     }
-    await submit(email, password);
+    return await submit(email, password);
   };
 
   return (
@@ -64,6 +56,7 @@ export default function SigninForm({ submit, closeModal }) {
               <TextInput
                 placeholder="email"
                 style={styles.textInput}
+                keyboardType="email-address"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
               />
@@ -85,7 +78,10 @@ export default function SigninForm({ submit, closeModal }) {
         </View>
       </KeyboardAvoidingView>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handlePressSubmit}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={() => handlePressSubmit()}
+      >
         <Text style={{ fontSize: 25, color: "white" }}>Submit</Text>
       </TouchableOpacity>
     </SafeAreaView>

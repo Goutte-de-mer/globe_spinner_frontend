@@ -72,7 +72,7 @@ const ProfileStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerTitle: "",
         headerBackTitleVisible: false,
         headerBackVisible: true,

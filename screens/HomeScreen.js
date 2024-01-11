@@ -1,8 +1,6 @@
 import React, { useCallback } from "react";
 import {
-  View,
   StyleSheet,
-  Text,
   Image,
   Pressable,
   useWindowDimensions,
@@ -15,8 +13,7 @@ export default function HomeScreen({ navigation }) {
   const { height, width } = useWindowDimensions();
 
   const handleSubmit = () => {
-navigation.navigate("FiltersHomeStack");
-
+    navigation.navigate("FiltersHomeStack");
   };
 
   return (
